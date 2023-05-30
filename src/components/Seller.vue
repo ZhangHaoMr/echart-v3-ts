@@ -33,7 +33,7 @@ onMounted(() => {
 })
 // 初始化echarts
 const initCharts = () => {
-  echart.value = proxy.$echarts.init(document.getElementById('charts'))
+  echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
   // console.log('echart.value', echart.value)
 
   echart.value.on('mouseover', () => {
@@ -91,7 +91,25 @@ const updataChart = () => {
         type: 'bar',
         data: valueData
       }
-    ]
+    ],
+    color: {
+      type: 'linear',
+      x: 0,
+      y: 0,
+      x2: 1,
+      y2: 0,
+      colorStops: [
+        {
+          offset: 0,
+          color: '#4e53db' // 0% 处的颜色
+        },
+        {
+          offset: 1,
+          color: '#8a6fb7' // 100% 处的颜色
+        }
+      ],
+      global: false // 缺省为 false
+    }
   }
   echart.value.setOption(option)
 }
@@ -110,6 +128,10 @@ const startInterval = () => {
     updataChart()
   }, 3000)
 }
+
+window.addEventListener('resize', () => {
+  console.log('resize')
+})
 </script>
 
 <style></style>
