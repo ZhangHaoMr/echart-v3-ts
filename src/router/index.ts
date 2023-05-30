@@ -11,6 +11,11 @@ const router = createRouter({
       path: '/SellerPage',
       name: 'SellerPage',
       component: () => import('@/views/SellerPage.vue')
+    },
+    {
+      path: '/TrendPage',
+      name: 'TrendPage',
+      component: () => import('@/views/TrendPage.vue')
     }
   ]
 })

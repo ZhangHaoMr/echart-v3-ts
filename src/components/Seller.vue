@@ -1,11 +1,11 @@
 <template>
-  <div class="seller">
+  <div class="container">
     <div class="chart" id="charts">chart</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted } from 'vue'
+import { ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue'
 import { getSeller } from '@/api/seller'
 
 const { proxy } = getCurrentInstance()
@@ -30,12 +30,82 @@ let timerId = ref<number>()
 onMounted(() => {
   initCharts()
   getData()
+  window.addEventListener('resize', screenAdapter)
+  screenAdapter()
 })
+
+// 组件销毁时 清除定时器
+onBeforeUnmount(() => {
+  clearInterval(timerId.value)
+  window.removeEventListener('resize', screenAdapter)
+})
+
 // 初始化echarts
 const initCharts = () => {
   echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
   // console.log('echart.value', echart.value)
 
+  const option = {
+    title: {
+      text: '| 商家销量排行',
+      left: 20,
+      top: 20,
+      textStyle: {
+        fontSize: 66
+      }
+    },
+    grid: {
+      top: '20%',
+      left: '3%',
+      right: '6%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'value'
+    },
+    yAxis: {
+      type: 'category'
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    series: [
+      {
+        type: 'bar',
+        barWidth: 66,
+        itemStyle: {
+          barBorderRadius: [0, 33, 33, 0],
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              {
+                offset: 0,
+                color: '#4e53db' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: '#8a6fb7' // 100% 处的颜色
+              }
+            ],
+            global: false // 缺省为 false
+          }
+        },
+        label: {
+          show: true,
+          position: 'right'
+        }
+      }
+    ]
+  }
+  echart.value.setOption(option)
   echart.value.on('mouseover', () => {
     clearInterval(timerId.value)
   })
@@ -66,7 +136,7 @@ const getData = async () => {
   }
 }
 
-// 配置图标 并 配置
+// 配置图标 并 配置分页
 const updataChart = () => {
   // 分页获取数据
   const stant = (currentPage.value - 1) * pageSize.value
@@ -79,37 +149,14 @@ const updataChart = () => {
   const valueData = showData.value.map((item: any) => item.value)
   // 图标配置
   const option = {
-    xAxis: {
-      type: 'value'
-    },
     yAxis: {
-      type: 'category',
       data: nameData
     },
     series: [
       {
-        type: 'bar',
         data: valueData
       }
-    ],
-    color: {
-      type: 'linear',
-      x: 0,
-      y: 0,
-      x2: 1,
-      y2: 0,
-      colorStops: [
-        {
-          offset: 0,
-          color: '#4e53db' // 0% 处的颜色
-        },
-        {
-          offset: 1,
-          color: '#8a6fb7' // 100% 处的颜色
-        }
-      ],
-      global: false // 缺省为 false
-    }
+    ]
   }
   echart.value.setOption(option)
 }
@@ -122,16 +169,37 @@ const startInterval = () => {
   timerId.value = setInterval(() => {
     currentPage.value++
 
+    updataChart()
     if (totalPage.value === currentPage.value) {
       currentPage.value = 1
     }
-    updataChart()
   }, 3000)
 }
 
-window.addEventListener('resize', () => {
-  console.log('resize')
-})
+// 图表自适应
+const screenAdapter = () => {
+  const titleFontSize =
+    (document.getElementById('charts')?.offsetWidth / 100) * 3.6
+
+  const dataOptions = {
+    title: {
+      textStyle: {
+        fontSize: titleFontSize
+      }
+    },
+    series: [
+      {
+        barWidth: titleFontSize,
+        itemStyle: {
+          barBorderRadius: [0, titleFontSize / 2, titleFontSize / 2, 0]
+        }
+      }
+    ]
+  }
+  echart.value.setOption(dataOptions)
+
+  echart.value.resize()
+}
 </script>
 
 <style></style>
