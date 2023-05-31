@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <div class="title">
+    <div class="title" :style="titleStyle">
       <span @click="selectStatus = !selectStatus">
-        {{ title }}
+        {{ ' | ' + title }}
       </span>
-      <span class="iconfont">&#xe6eb;</span>
-      <div class="select" v-if="selectStatus">
+      <span class="iconfont" :style="titleStyle">&#xe6eb;</span>
+      <div class="select" :style="marginStyle" v-if="selectStatus">
         <div
           class="select-item"
           v-for="(item, index) in selectArr"
@@ -42,6 +42,9 @@ const selectStatus = ref(false)
 // const selectArr = ref<any>([])
 const dataType = ref('map')
 
+// 动态字体大小
+const titleFontSize = ref(0)
+
 // eslint-disable-next-line vue/return-in-computed-property
 const selectArr = computed(() => {
   if (!resAllData.value || !resAllData.value.type) {
@@ -59,6 +62,14 @@ const title = computed(() => {
   } else {
     return resAllData.value[dataType.value].title
   }
+})
+
+const titleStyle = computed(() => {
+  return { fontSize: titleFontSize.value + 'px' }
+})
+
+const marginStyle = computed(() => {
+  return { marginLeft: titleFontSize.value / 2 + 'px' }
 })
 
 // 初始化echarts
@@ -86,11 +97,6 @@ const initCharts = () => {
       bottom: '1%',
       containLabel: true
       // show: true
-    },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
     },
     xAxis: {
       type: 'category',
@@ -190,9 +196,6 @@ const updataChart = () => {
     legend: {
       data: legendArrs
     },
-    // yAxis: {
-    //   data: nameData
-    // },
     series: seriesArrs
   }
   echart.value.setOption(option)
@@ -200,6 +203,21 @@ const updataChart = () => {
 
 // 图表自适应
 const screenAdapter = () => {
+  titleFontSize.value =
+    (document.getElementById('charts').offsetWidth / 100) * 3.6
+
+  const option = {
+    legend: {
+      itemWidth: titleFontSize.value,
+      itemHeight: titleFontSize.value,
+      itemGap: titleFontSize.value,
+      textStyle: {
+        fontSize: titleFontSize.value
+      }
+    }
+  }
+  echart.value.setOption(option)
+
   echart.value.resize()
 }
 
