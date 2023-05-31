@@ -2,14 +2,15 @@
   <div class="container">
     <div class="title">
       <span @click="selectStatus = !selectStatus">
-        {{ selectArr[0]?.text }}
+        {{ title }}
       </span>
-      <span>^</span>
+      <span class="iconfont">&#xe6eb;</span>
       <div class="select" v-if="selectStatus">
         <div
           class="select-item"
           v-for="(item, index) in selectArr"
           :key="index"
+          @click="handleSelect(item.key)"
         >
           {{ item.text }}
         </div>
@@ -20,7 +21,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  onBeforeUnmount,
+  computed
+} from 'vue'
 import { getTrend } from '@/api/trend'
 
 const { proxy } = getCurrentInstance()
@@ -32,7 +39,27 @@ const resAllData = ref<any>()
 
 // 控制 下拉选择 显示隐藏
 const selectStatus = ref(false)
-const selectArr = ref<any>([])
+// const selectArr = ref<any>([])
+const dataType = ref('map')
+
+// eslint-disable-next-line vue/return-in-computed-property
+const selectArr = computed(() => {
+  if (!resAllData.value || !resAllData.value.type) {
+    return []
+  } else {
+    return resAllData.value.type.filter((item: any) => {
+      return item.key != dataType.value
+    })
+  }
+})
+
+const title = computed(() => {
+  if (!resAllData.value) {
+    return ''
+  } else {
+    return resAllData.value[dataType.value].title
+  }
+})
 
 // 初始化echarts
 const initCharts = () => {
@@ -95,12 +122,12 @@ const getData = async () => {
 // 配置图表
 const updataChart = () => {
   // 获取下拉框 数据
-  selectArr.value = resAllData.value.type
+  // selectArr.value = resAllData.value.type
 
   // 获取 x轴 数据
   const timesArrs = resAllData.value.common.month
   // 获取 y轴 数据
-  const valueArrs = resAllData.value.map.data
+  const valueArrs = resAllData.value[dataType.value].data
   // 获取legend数据
   const legendArrs = valueArrs.map((item: any) => item.name)
 
@@ -122,12 +149,12 @@ const updataChart = () => {
   ]
 
   // 获取 y轴 渲染 数据
-  const seriesArrs = valueArrs.map((item, index) => {
+  const seriesArrs = valueArrs.map((item: any, index: number) => {
     return {
       name: item.name,
       type: 'line',
       data: item.data,
-      stack: 'Total',
+      stack: dataType.value,
       smooth: true,
       showSymbol: false,
       areaStyle: {
@@ -182,6 +209,16 @@ onMounted(() => {
   window.addEventListener('resize', screenAdapter)
   screenAdapter()
 })
+
+// onBeforeUnmount(() => { })
+
+// 切换图表
+const handleSelect = (e: any) => {
+  selectStatus.value = false
+  console.log(e)
+  dataType.value = e
+  updataChart()
+}
 </script>
 
 <style>
