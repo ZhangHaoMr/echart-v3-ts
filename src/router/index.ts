@@ -16,6 +16,11 @@ const router = createRouter({
       path: '/TrendPage',
       name: 'TrendPage',
       component: () => import('@/views/TrendPage.vue')
+    },
+    {
+      path: '/MapPage',
+      name: 'MapPage',
+      component: () => import('@/views/MapPage.vue')
     }
   ]
 })

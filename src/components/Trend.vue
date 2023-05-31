@@ -25,8 +25,8 @@ import {
   ref,
   getCurrentInstance,
   onMounted,
-  onBeforeUnmount,
-  computed
+  computed,
+  onBeforeUnmount
 } from 'vue'
 import { getTrend } from '@/api/trend'
 
@@ -228,7 +228,9 @@ onMounted(() => {
   screenAdapter()
 })
 
-// onBeforeUnmount(() => { })
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', screenAdapter)
+})
 
 // 切换图表
 const handleSelect = (e: any) => {
