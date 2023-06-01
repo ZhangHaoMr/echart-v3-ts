@@ -21,6 +21,11 @@ const router = createRouter({
       path: '/MapPage',
       name: 'MapPage',
       component: () => import('@/views/MapPage.vue')
+    },
+    {
+      path: '/RankPage',
+      name: 'RankPage',
+      component: () => import('@/views/RankPage.vue')
     }
   ]
 })
