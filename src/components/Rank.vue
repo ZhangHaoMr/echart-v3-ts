@@ -15,6 +15,12 @@ const echart = ref()
 // 保存所有数据
 const resAllData = ref<any>()
 
+// 保存定时器
+let timerId = ref<number>()
+
+const startValue = ref(0)
+const endValue = ref(9)
+
 // 初始化echarts
 const initCharts = async () => {
   echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
@@ -38,6 +44,13 @@ const initCharts = async () => {
     }
   }
   echart.value.setOption(option)
+
+  echart.value.on('mouseover', () => {
+    clearInterval(timerId.value)
+  })
+  echart.value.on('mouseout', () => {
+    startInterval()
+  })
 }
 // 获取后台返回的图表数据
 const getData = async () => {
@@ -77,16 +90,23 @@ const updataChart = () => {
     yAxis: {
       type: 'value'
     },
+    dataZoom: {
+      show: false,
+      startValue: startValue.value,
+      endValue: endValue.value
+    },
     series: [
       {
         type: 'bar',
         data: yData,
         label: {
           show: true,
-          position: 'top'
+          position: 'top',
+          distance: 10,
+          rotate: 45
         },
         itemStyle: {
-          barBorderRadius: [33, 33, 0, 0],
+          barBorderRadius: [50, 50, 0, 0],
           color: (arg: any) => {
             let targetColor = colorArr[0]
             if (arg.value >= 300) {
@@ -106,6 +126,8 @@ const updataChart = () => {
     ]
   }
   echart.value.setOption(option)
+
+  startInterval()
 }
 
 // 图表自适应
@@ -126,11 +148,33 @@ const screenAdapter = () => {
       textStyle: {
         fontSize: titleFontSize / 2
       }
-    }
+    },
+    series: [
+      {
+        barWidth: titleFontSize
+      }
+    ]
   }
   echart.value.setOption(option)
 
   echart.value.resize()
+}
+
+// 动态加载
+const startInterval = () => {
+  if (timerId.value) {
+    clearInterval(timerId.value)
+  }
+  timerId.value = setInterval(() => {
+    startValue.value++
+    endValue.value++
+
+    if (endValue.value > resAllData.value.length - 1) {
+      startValue.value = 0
+      endValue.value = 9
+    }
+    updataChart()
+  }, 1000)
 }
 
 onMounted(() => {
@@ -142,6 +186,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', screenAdapter)
+  clearInterval(timerId.value)
 })
 </script>
 
