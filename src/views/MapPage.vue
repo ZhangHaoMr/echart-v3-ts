@@ -1,6 +1,6 @@
 <template>
   <!-- 商家分布 -->
-  <div class="map-page"><Map /></div>
+  <div class="page"><Map /></div>
 </template>
 
 <script lang="ts" setup>

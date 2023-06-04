@@ -1,12 +1,12 @@
 <template>
+  <!--销售排行 -->
   <div class="page">
-    <!-- 商家销量排行 -->
-    <seller />
+    <hot />
   </div>
 </template>
 
 <script setup lang="ts">
-import seller from '@/components/Seller.vue'
+import hot from '@/components/Hot.vue'
 </script>
 
 <style></style>

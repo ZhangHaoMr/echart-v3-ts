@@ -22,7 +22,7 @@ const startValue = ref(0)
 const endValue = ref(9)
 
 // 初始化echarts
-const initCharts = async () => {
+const initCharts = () => {
   echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
   // console.log('echart.value', echart.value)
 

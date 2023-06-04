@@ -26,6 +26,16 @@ const router = createRouter({
       path: '/RankPage',
       name: 'RankPage',
       component: () => import('@/views/RankPage.vue')
+    },
+    {
+      path: '/HotPage',
+      name: 'HotPage',
+      component: () => import('@/views/HotPage.vue')
+    },
+    {
+      path: '/StockPage',
+      name: 'StockPage',
+      component: () => import('@/views/StockPage.vue')
     }
   ]
 })

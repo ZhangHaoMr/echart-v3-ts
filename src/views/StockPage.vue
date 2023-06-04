@@ -1,12 +1,11 @@
 <template>
   <div class="page">
-    <!-- 销售趋势分析 -->
-    <Trend />
+    <stock />
   </div>
 </template>
 
 <script lang="ts" setup>
-import Trend from '@/components/Trend.vue'
+import stock from '@/components/Stock.vue'
 </script>
 
 <style></style>

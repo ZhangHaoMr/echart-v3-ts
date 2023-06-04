@@ -1,6 +1,6 @@
 <template>
-  <!-- 商家分布 -->
-  <div class="rank-page">
+  <!--销售排行 -->
+  <div class="page">
     <rank />
   </div>
 </template>
