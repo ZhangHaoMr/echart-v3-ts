@@ -16,7 +16,10 @@
         </div>
       </div>
     </div>
-    <div class="chart" id="charts">chart</div>
+    <div class="chart" id="trend">chart</div>
+    <div class="resize" v-if="false">
+      <span class="iconfont">&#xe825;</span>
+    </div>
   </div>
 </template>
 
@@ -26,14 +29,15 @@ import {
   getCurrentInstance,
   onMounted,
   computed,
-  onBeforeUnmount
+  onBeforeUnmount,
+  shallowRef
 } from 'vue'
 import { getTrend } from '@/api/trend'
 
 const { proxy } = getCurrentInstance()
 
 // 保存echarts实例
-const echart = ref()
+const echart = shallowRef()
 // 保存所有数据
 const resAllData = ref<any>()
 
@@ -74,7 +78,7 @@ const marginStyle = computed(() => {
 
 // 初始化echarts
 const initCharts = () => {
-  echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
+  echart.value = proxy.$echarts.init(document.getElementById('trend'), 'chalk')
   // console.log('echart.value', echart.value)
 
   const option = {
@@ -116,7 +120,7 @@ const initCharts = () => {
 const getData = async () => {
   try {
     const res = await getTrend()
-    console.log(res)
+    // console.log(res)
 
     resAllData.value = res
     updataChart()
@@ -204,7 +208,7 @@ const updataChart = () => {
 // 图表自适应
 const screenAdapter = () => {
   titleFontSize.value =
-    (document.getElementById('charts').offsetWidth / 100) * 3.6
+    (document.getElementById('trend').offsetWidth / 100) * 3.6
 
   const option = {
     legend: {

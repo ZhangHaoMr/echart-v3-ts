@@ -11,6 +11,15 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  position: relative;
+}
+
+.resize {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #fff;
+  cursor: pointer;
 }
 
 .chart {

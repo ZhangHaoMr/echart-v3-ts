@@ -1,17 +1,23 @@
 <template>
   <div class="container">
-    <div class="chart" id="charts">chart</div>
+    <div class="chart" id="rank">chart</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  onBeforeUnmount,
+  shallowRef
+} from 'vue'
 import { getRank } from '@/api/rank'
 
 const { proxy } = getCurrentInstance()
 
 // 保存echarts实例
-const echart = ref()
+const echart = shallowRef()
 // 保存所有数据
 const resAllData = ref<any>()
 
@@ -23,7 +29,7 @@ const endValue = ref(9)
 
 // 初始化echarts
 const initCharts = () => {
-  echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
+  echart.value = proxy.$echarts.init(document.getElementById('rank'), 'chalk')
   // console.log('echart.value', echart.value)
 
   const option = {
@@ -133,7 +139,7 @@ const updataChart = () => {
 // 图表自适应
 const screenAdapter = () => {
   const titleFontSize =
-    (document.getElementById('charts').offsetWidth / 100) * 3.6
+    (document.getElementById('rank').offsetWidth / 100) * 3.6
 
   const option = {
     title: {

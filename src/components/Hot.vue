@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="chart" id="charts">chart</div>
+    <div class="chart" id="hot">chart</div>
     <span class="iconfont arr_left" :style="customStyle" @click="handleToLeft">
       &#xe6ef;
     </span>
@@ -13,6 +13,9 @@
     </span>
     <span class="cat_name">{{ catName }}</span>
   </div>
+  <div class="resize" v-if="false">
+    <span class="iconfont">&#xe825;</span>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -21,14 +24,15 @@ import {
   getCurrentInstance,
   onMounted,
   onBeforeUnmount,
-  computed
+  computed,
+  shallowRef
 } from 'vue'
 import { getHot } from '@/api/hot'
 
 const { proxy } = getCurrentInstance()
 
 // 保存echarts实例
-const echart = ref()
+const echart = shallowRef()
 
 // 保存所有数据
 const resAllData = ref<any>()
@@ -39,7 +43,7 @@ const titleFontSize = ref()
 
 // 初始化echarts
 const initCharts = () => {
-  echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
+  echart.value = proxy.$echarts.init(document.getElementById('hot'), 'chalk')
   // console.log('echart.value', echart.value)
 
   const option = {
@@ -121,8 +125,7 @@ const updataChart = () => {
 
 // 图表自适应
 const screenAdapter = () => {
-  titleFontSize.value =
-    (document.getElementById('charts').offsetWidth / 100) * 3.6
+  titleFontSize.value = (document.getElementById('hot').offsetWidth / 100) * 3.6
 
   const option = {
     title: {

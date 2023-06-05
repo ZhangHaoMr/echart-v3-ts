@@ -1,17 +1,23 @@
 <template>
   <div class="container">
-    <div class="chart" id="charts">chart</div>
+    <div class="chart" id="stock">chart</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  onBeforeUnmount,
+  shallowRef
+} from 'vue'
 import { getStock } from '@/api/stock'
 
 const { proxy } = getCurrentInstance()
 
 // 保存echarts实例
-const echart = ref()
+const echart = shallowRef()
 // 保存所有数据
 const resAllData = ref<any>()
 
@@ -27,9 +33,19 @@ const showData = ref([])
 // 保存定时器
 let timerId = ref<number>()
 
+const titleFontSize = ref()
+
 // 初始化echarts
 const initCharts = () => {
-  echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
+  // 圆环位置
+  const centerPointers = [
+    ['18%', '40%'],
+    ['50%', '40%'],
+    ['82%', '40%'],
+    ['34%', '75%'],
+    ['66%', '75%']
+  ]
+  echart.value = proxy.$echarts.init(document.getElementById('stock'), 'chalk')
   // console.log('echart.value', echart.value)
 
   const option = {
@@ -40,7 +56,39 @@ const initCharts = () => {
       textStyle: {
         fontSize: 66
       }
-    }
+    },
+    series: [
+      {
+        type: 'pie',
+        labelLine: { show: false },
+        hoverAnimation: false,
+        center: centerPointers[0]
+      },
+      {
+        type: 'pie',
+        labelLine: { show: false },
+        hoverAnimation: false,
+        center: centerPointers[1]
+      },
+      {
+        type: 'pie',
+        labelLine: { show: false },
+        hoverAnimation: false,
+        center: centerPointers[2]
+      },
+      {
+        type: 'pie',
+        labelLine: { show: false },
+        hoverAnimation: false,
+        center: centerPointers[3]
+      },
+      {
+        type: 'pie',
+        labelLine: { show: false },
+        hoverAnimation: false,
+        center: centerPointers[4]
+      }
+    ]
   }
   echart.value.setOption(option)
   echart.value.on('mouseover', () => {
@@ -71,15 +119,6 @@ const getData = async () => {
 
 // 配置图标 并 配置分页
 const updataChart = () => {
-  // 圆环位置
-  const centerPointers = [
-    ['18%', '40%'],
-    ['50%', '40%'],
-    ['82%', '40%'],
-    ['34%', '75%'],
-    ['66%', '75%']
-  ]
-
   // 圆环颜色
   const colorArrs = [
     ['#4FF778', '#0BA82C'],
@@ -96,11 +135,6 @@ const updataChart = () => {
 
   const seriesArr = showData.value.map((item: any, index) => {
     return {
-      type: 'pie',
-      radius: [110, 100],
-      center: centerPointers[index],
-      label: { show: false },
-      hoverAnimation: false,
       data: [
         {
           name: `${item.name} \n\n ${item.sales}`,
@@ -164,8 +198,8 @@ const startInterval = () => {
 
 // 图表自适应
 const screenAdapter = () => {
-  const titleFontSize =
-    (document.getElementById('charts')?.offsetWidth / 100) * 3.6
+  titleFontSize.value =
+    (document.getElementById('stock').offsetWidth / 100) * 3.6
 
   const dataOptions = {
     title: {
@@ -175,24 +209,24 @@ const screenAdapter = () => {
     },
     series: [
       {
-        radius: [titleFontSize * 2, titleFontSize * 2 * 1.125],
-        label: { fontSize: titleFontSize / 2 }
+        radius: [titleFontSize.value * 2.8, titleFontSize.value * 2.8 * 1.125],
+        label: { fontSize: titleFontSize.value / 2 }
       },
       {
-        radius: [titleFontSize * 2, titleFontSize * 2 * 1.125],
-        label: { fontSize: titleFontSize / 2 }
+        radius: [titleFontSize.value * 2.8, titleFontSize.value * 2.8 * 1.125],
+        label: { fontSize: titleFontSize.value / 2 }
       },
       {
-        radius: [titleFontSize * 2, titleFontSize * 2 * 1.125],
-        label: { fontSize: titleFontSize / 2 }
+        radius: [titleFontSize.value * 2.8, titleFontSize.value * 2.8 * 1.125],
+        label: { fontSize: titleFontSize.value / 2 }
       },
       {
-        radius: [titleFontSize * 2, titleFontSize * 2 * 1.125],
-        label: { fontSize: titleFontSize / 2 }
+        radius: [titleFontSize.value * 2.8, titleFontSize.value * 2.8 * 1.125],
+        label: { fontSize: titleFontSize.value / 2 }
       },
       {
-        radius: [titleFontSize * 2, titleFontSize * 2 * 1.125],
-        label: { fontSize: titleFontSize / 2 }
+        radius: [titleFontSize.value * 2.8, titleFontSize.value * 2.8 * 1.125],
+        label: { fontSize: titleFontSize.value / 2 }
       }
     ]
   }

@@ -1,17 +1,23 @@
 <template>
   <div class="container">
-    <div class="chart" id="charts">chart</div>
+    <div class="chart" id="seller">chart</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  onBeforeUnmount,
+  shallowRef
+} from 'vue'
 import { getSeller } from '@/api/seller'
 
 const { proxy } = getCurrentInstance()
 
 // 保存echarts实例
-const echart = ref()
+const echart = shallowRef()
 // 保存所有数据
 const resAllData = ref<any>()
 
@@ -42,7 +48,7 @@ onBeforeUnmount(() => {
 
 // 初始化echarts
 const initCharts = () => {
-  echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
+  echart.value = proxy.$echarts.init(document.getElementById('seller'), 'chalk')
   // console.log('echart.value', echart.value)
 
   const option = {
@@ -179,7 +185,7 @@ const startInterval = () => {
 // 图表自适应
 const screenAdapter = () => {
   const titleFontSize =
-    (document.getElementById('charts')?.offsetWidth / 100) * 3.6
+    (document.getElementById('seller').offsetWidth / 100) * 3.6
 
   const dataOptions = {
     title: {

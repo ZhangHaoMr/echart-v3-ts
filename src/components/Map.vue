@@ -1,11 +1,17 @@
 <template>
   <div class="container" @dblclick="revertMap">
-    <div class="chart" id="charts">chart</div>
+    <div class="chart" id="map">chart</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  onBeforeUnmount,
+  shallowRef
+} from 'vue'
 import axios from 'axios'
 import { getMap } from '@/api/map'
 import { getProvinceMapInfo } from '@/http/map_utils.js'
@@ -13,13 +19,13 @@ import { getProvinceMapInfo } from '@/http/map_utils.js'
 const { proxy } = getCurrentInstance()
 
 // 保存echarts实例
-const echart = ref()
+const echart = shallowRef()
 // 保存所有数据
 const resAllData = ref<any>()
 
 // 初始化echarts
 const initCharts = async () => {
-  echart.value = proxy.$echarts.init(document.getElementById('charts'), 'dark')
+  echart.value = proxy.$echarts.init(document.getElementById('map'), 'chalk')
   // console.log('echart.value', echart.value)
 
   try {
@@ -121,8 +127,7 @@ const updataChart = () => {
 
 // 图表自适应
 const screenAdapter = () => {
-  const titleFontSize =
-    (document.getElementById('charts').offsetWidth / 100) * 3.6
+  const titleFontSize = (document.getElementById('map').offsetWidth / 100) * 3.6
 
   const option = {
     title: {
