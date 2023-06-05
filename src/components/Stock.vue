@@ -235,6 +235,10 @@ const screenAdapter = () => {
   echart.value.resize()
 }
 
+defineExpose({
+  screenAdapter
+})
+
 onMounted(() => {
   initCharts()
   getData()

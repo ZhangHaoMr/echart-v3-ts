@@ -10,7 +10,8 @@ import {
   getCurrentInstance,
   onMounted,
   onBeforeUnmount,
-  shallowRef
+  shallowRef,
+  defineExpose
 } from 'vue'
 import { getRank } from '@/api/rank'
 
@@ -182,6 +183,10 @@ const startInterval = () => {
     updataChart()
   }, 1000)
 }
+
+defineExpose({
+  screenAdapter
+})
 
 onMounted(() => {
   initCharts()

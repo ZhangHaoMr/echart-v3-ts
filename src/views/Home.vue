@@ -23,30 +23,75 @@
     </div>
     <div class="home-content">
       <div class="content-left">
-        <div class="left-top">
-          <trend />
-          <div class="resize">
-            <span class="iconfont icon">&#xe826;</span>
+        <div
+          class="left-top"
+          :class="[fullScreenStatus.trend ? 'fullscreen' : '']"
+        >
+          <trend ref="trendRef"></trend>
+          <div class="resize" @click="handleToggleScreen('trend')">
+            <span class="iconfont icon">
+              {{ fullScreenStatus.trend ? '&#xe825;' : '&#xe826;' }}
+            </span>
           </div>
         </div>
-        <div class="left-bottom">
-          <seller />
+        <div
+          class="left-bottom"
+          :class="[fullScreenStatus.seller ? 'fullscreen' : '']"
+        >
+          <seller ref="sellerRef" />
+          <div class="resize" @click="handleToggleScreen('seller')">
+            <span class="iconfont icon">
+              {{ fullScreenStatus.seller ? '&#xe825;' : '&#xe826;' }}
+            </span>
+          </div>
         </div>
       </div>
       <div class="content-center">
-        <div class="center-top">
-          <Map />
+        <div
+          class="center-top"
+          :class="[fullScreenStatus.map ? 'fullscreen' : '']"
+        >
+          <Map ref="mapRef" />
+          <div class="resize" @click="handleToggleScreen('map')">
+            <span class="iconfont icon">
+              {{ fullScreenStatus.map ? '&#xe825;' : '&#xe826;' }}
+            </span>
+          </div>
         </div>
-        <div class="center-bottom">
-          <rank />
+        <div
+          class="center-bottom"
+          :class="[fullScreenStatus.rank ? 'fullscreen' : '']"
+        >
+          <rank ref="rankRef" />
+          <div class="resize" @click="handleToggleScreen('rank')">
+            <span class="iconfont icon">
+              {{ fullScreenStatus.rank ? '&#xe825;' : '&#xe826;' }}
+            </span>
+          </div>
         </div>
       </div>
       <div class="content-right">
-        <div class="right-top">
-          <hot />
+        <div
+          class="right-top"
+          :class="[fullScreenStatus.hot ? 'fullscreen' : '']"
+        >
+          <hot ref="hotRef" />
+          <div class="resize" @click="handleToggleScreen('hot')">
+            <span class="iconfont icon">
+              {{ fullScreenStatus.hot ? '&#xe825;' : '&#xe826;' }}
+            </span>
+          </div>
         </div>
-        <div class="right-bottom">
-          <stock />
+        <div
+          class="right-bottom"
+          :class="[fullScreenStatus.stock ? 'fullscreen' : '']"
+        >
+          <stock ref="stockRef" />
+          <div class="resize" @click="handleToggleScreen('stock')">
+            <span class="iconfont icon">
+              {{ fullScreenStatus.stock ? '&#xe825;' : '&#xe826;' }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -54,15 +99,50 @@
 </template>
 
 <script lang="ts" setup>
-import trend from './TrendPage.vue'
-import seller from './SellerPage.vue'
-import Map from './MapPage.vue'
-import hot from './HotPage.vue'
-import rank from './RankPage.vue'
-import stock from './StockPage.vue'
+import { reactive, nextTick, getCurrentInstance } from 'vue'
+import trend from '@/components/Trend.vue'
+import seller from '@/components/Seller.vue'
+import Map from '@/components/Map.vue'
+import hot from '@/components/Hot.vue'
+import rank from '@/components/Rank.vue'
+import stock from '@/components/Stock.vue'
+
+const { proxy } = getCurrentInstance() as any
+
+const fullScreenStatus = reactive<any>({
+  trend: false,
+  seller: false,
+  map: false,
+  rank: false,
+  hot: false,
+  stock: false
+})
+
+// const trendRef = ref<any>(null)
+
+const handleToggleScreen = (arg: string) => {
+  // console.log('arg', arg)
+
+  fullScreenStatus[arg] = !fullScreenStatus[arg]
+
+  nextTick(() => {
+    // console.log(proxy.$refs[arg + 'Ref'])
+    proxy.$refs[arg + 'Ref'].screenAdapter()
+  })
+}
 </script>
 
 <style>
+.fullscreen {
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 1000 !important;
+  margin: 0 !important;
+}
+
 .home {
   width: 100%;
   height: 100%;

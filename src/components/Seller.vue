@@ -206,6 +206,10 @@ const screenAdapter = () => {
 
   echart.value.resize()
 }
+
+defineExpose({
+  screenAdapter
+})
 </script>
 
 <style></style>

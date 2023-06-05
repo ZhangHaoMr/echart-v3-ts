@@ -13,9 +13,6 @@
     </span>
     <span class="cat_name">{{ catName }}</span>
   </div>
-  <div class="resize" v-if="false">
-    <span class="iconfont">&#xe825;</span>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -181,6 +178,10 @@ const catName = computed(() => {
   } else {
     return resAllData.value[currentIndex.value].name
   }
+})
+
+defineExpose({
+  screenAdapter
 })
 
 onMounted(() => {

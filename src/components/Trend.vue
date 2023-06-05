@@ -17,9 +17,6 @@
       </div>
     </div>
     <div class="chart" id="trend">chart</div>
-    <div class="resize" v-if="false">
-      <span class="iconfont">&#xe825;</span>
-    </div>
   </div>
 </template>
 
@@ -224,6 +221,10 @@ const screenAdapter = () => {
 
   echart.value.resize()
 }
+
+defineExpose({
+  screenAdapter
+})
 
 onMounted(() => {
   initCharts()

@@ -156,6 +156,10 @@ const revertMap = () => {
   })
 }
 
+defineExpose({
+  screenAdapter
+})
+
 onMounted(() => {
   initCharts()
   getData()
